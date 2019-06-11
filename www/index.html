@@ -99,6 +99,17 @@
                 executionStartDate: ''
             }
         },
+        beforeCreate: function() {
+            // Grab the API gateway config.
+            fetch('/js/config.js')
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(myJson) {
+                        window.apiGatewayEndpoint = myJson.apiGatewayEndpoint;
+                    });
+        },
+
         methods: {
 
             executionUrl: function () {
@@ -112,11 +123,8 @@
             },
 
             createIncident: function () {
-
-                console.log(this.data);
-
-                // POST /someUrl
-                this.$http.post('https://[ADD YOUR API GATEWAY URL HERE]/incident', this.incidentData).then(response => {
+                // @see beforeCreate() and js/config.js for this value.
+                this.$http.post(window.apiGatewayEndpoint, this.incidentData).then(response => {
                         // get status
                         console.log(response.body)
                         this.executionArn = response.body.executionArn;
