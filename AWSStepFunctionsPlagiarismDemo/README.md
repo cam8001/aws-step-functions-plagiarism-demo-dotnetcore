@@ -9,6 +9,19 @@
 * [AWS SAM CLI](https://github.com/awslabs/aws-sam-local) installed
 * [Mono](https://www.mono-project.com/) installed if you are using Linux & macOS
 
+#### macOS
+
+You can install Mono and Dotnet on MacOS with brew:
+
+`brew install mono && brew cask install dotnet-sdk`
+
+The brew scripts update your path; you'll need to open a new Terminal window to
+start using the install scripts.
+
+Then:
+
+`dotnet tool install -g Amazon.Lambda.Tools`
+
 ### Recommended Tools
 
 * [AWS Toolkit for Visual Studio](https://aws.amazon.com/visualstudio/)
@@ -101,7 +114,7 @@ After deployment is complete you can run the following command to retrieve the A
 aws cloudformation describe-stacks \
     --stack-name aws-step-functions-plagiarism-demo \
     --query 'Stacks[].Outputs'
-``` 
+```
 
 
 ## Testing
@@ -171,7 +184,8 @@ aws cloudformation deploy \
     --parameter-overrides MyParameterSample=MySampleValue
 
 aws cloudformation describe-stacks \
-    --stack-name aws-step-functions-plagiarism-demo --query 'Stacks[].Outputs'
+    --stack-name aws-step-functions-plagiarism-demo --query 'Stacks[].Outputs' \
+    | grep api
 ```
 
 ## Bringing to the next level

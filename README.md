@@ -32,6 +32,14 @@ This example uses a simple architecture, hosting a static website in [Amazon Sim
 * `AWSStepFunctionsPlagiarismDemo` - contains all the project files for the demo.
 * `www` - sample Vue.js SPA to invoke the API.
 
+## Getting started
+
+* Deploy the SAM template with the Step Function definition (see the `AWSStepFunctionsPlagiarismDemo/README.md` for more detail.
+* Get the API Gateway endpoint from the deployed CloudFormation outputs, and add it to `www/js/config.js`.
+* Subscribe to the SNS topic created by CloudFormation.
+* Deploy the www folder to a static web server (for example, s3, Amplify, or locally with npm `http-server`)
+* Start a new job from the web page, and watch the State Machine execute in the AWS console.
+
 ## Credits
 
 ### Cookiecutter SAM for DotNet Lambda functions

@@ -28,7 +28,10 @@
      <div class="row">
         <div class="col">
             <div class="row">
-                <div class="col">
+            <div class="col">
+            <!--
+                Incident Form
+            -->
             <form id="incidentForm" v-on:submit.prevent="createIncident">
                 <h3 class="text-primary">Create new plagiarism incident</h3>
                 <div class="form-group">
@@ -42,6 +45,20 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Create incident</button>
                     <button type="button" class="btn btn-secondary" v-on:click="resetForm">New incident</button>
+                </div>
+            </form>
+            <br />
+            <!--
+                Exam Form
+            -->
+            <form id="examForm" v-on:submit.prevent="submitExam">
+              <div class="form-group">
+                <h3>Submit Exam Score</h3>
+                <input type="number" size="3" class="form-control col-8" id="ExamScore" v-model="examData.Score" min="0" max="100" />
+                <input type="hidden" id="TaskToken" v-model="examData.TaskToken" v-model="examData.TaskToken" />
+              </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit Exam Score</button>
                 </div>
             </form>
             </div>
@@ -103,6 +120,11 @@
                     StudentId: '',
                     IncidentDate: ''
                 },
+                examData: {
+                    Score: '',
+                    // TaskToken identifying StepFunction execution.
+                    TaskToken: '',
+                },
                 showMessage: false,
                 executionArn: '',
                 executionStartDate: ''
@@ -118,7 +140,15 @@
                         window.apiGatewayEndpoint = myJson.apiGatewayEndpoint;
                     });
         },
-
+        // If present, get the task token, then set our hidden form value.
+        // TaskTokens can get passed as a GET variable, in the form ?TaskToken=
+        created: function() {
+            let uri = window.location.search.substring(1);
+            let params = new URLSearchParams(uri);
+            let taskToken = params.get('TaskToken');
+            this.examData.TaskToken = taskToken;
+            console.log("Passed TaskToken is: " + taskToken);
+        },
         methods: {
 
             executionUrl: function () {
@@ -130,21 +160,41 @@
                 this.incidentData.IncidentDate = ''
                 this.showMessage = false
             },
-
+            /**
+             * Creates an incident, kicking off the Step Function workflow.
+             */
             createIncident: function () {
+                let endpoint = window.apiGatewayEndpoint + 'incident';
                 // @see beforeCreate() and js/config.js for this value.
-                this.$http.post(window.apiGatewayEndpoint, this.incidentData).then(response => {
+                this.$http.post(endpoint, this.incidentData).then(response => {
                         // get status
-                        console.log(response.body)
+                        console.log(response.body);
                         this.executionArn = response.body.executionArn;
                         this.executionStartDate = response.body.startDate;
                         this.showMessage = true;
 
                     }, error => {
                         console.log(error)
-
-                });
+                    });
+            },
+            /**
+             * Submits an exam into the flow, with an appropriate mark.
+             */
+            submitExam: function () {
+                let endpoint = window.apiGatewayEndpoint + 'exam';
+                console.log("Posting to " + endpoint);
+                this.$http.post(endpoint, this.examData)
+                    .then(response => {
+                            console.log(response.body);
+                        }, error => {
+                            console.log("Error", error);
+                        })
+                    .catch((e) => {
+                        console.log("Caught exception:", e.toString());
+                    });
             }
+
+
     } // end methods
 
     })
