@@ -47,6 +47,8 @@ The flow for use of the Test Centre is:
 
 6. Deploy the site.
 
+7. The TestCentre will be available at the root of the site, with the admin site under /admin.
+
 ## Project setup
 
 This project was built with the `vue-cli`, and inherits `yarn` as a package

@@ -85,6 +85,8 @@
 
 <script type="application/javascript">
 
+    var execution_url = 'APIGW_ENDPOINT';
+
     var app = new Vue({
         el: '#app',
         data: function () {
@@ -116,7 +118,7 @@
                 console.log(this.data);
 
                 // POST /someUrl
-                this.$http.post('https://[ADD YOUR API GATEWAY URL HERE]/incident', this.incidentData).then(response => {
+                this.$http.post('https://' + execution_url + '/incident', this.incidentData).then(response => {
                         // get status
                         console.log(response.body)
                         this.executionArn = response.body.executionArn;

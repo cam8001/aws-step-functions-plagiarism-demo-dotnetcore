@@ -8,11 +8,18 @@ frontend:
   phases:
     build:
       commands:
+        # First get the testcentre set up.
         - cd src/frontend/testcentre
         - ./replace-endpoint.sh $APIGW_ENDPOINT
         - yarn global add @vue/cli
         - yarn install
         - yarn build
+        # Then, prepare the backend site for exam administrators.
+        - cd ../admin
+        - ./replace-endpoint.sh $APIGW_ENDPOINT
+        - cd ../testcentre
+        #  Put the admin interface into the dist folder for deployment.
+        - cp -r ../admin dist/
   artifacts:
     baseDirectory: src/frontend/testcentre/dist
     files:
